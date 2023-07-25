@@ -4,11 +4,13 @@
   "description": "Learning node, express and mongoDB",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
   "author": "Oliver Hidalgo",
   "license": "ISC",
   "dependencies": {
-    "express": "4.16"
+    "express": "4.16",
+    "morgan": "^1.10.0"
   }
 }

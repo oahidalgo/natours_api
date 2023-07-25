@@ -1,11 +1,14 @@
 const express = require('express');
 const fs = require('fs');
 const app = express();
+const morgan = require('morgan');
 const port = 3000;
 
 //Middleware, in the middle of the request and response
 //analyze the body of a request with JSON format
 //converts the data into a JSON and put it into req.body obj
+//1. MIDDLEWARES
+app.use(morgan('dev'));
 app.use(express.json());
 
 //order of middleware its very important because of the middleware stack
@@ -23,6 +26,7 @@ const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`)
 );
 
+//2. ROUTE HANDLERS
 const getAllTours = (req, res) => {
   console.log(req.requestTime);
   res.status(200).json({
@@ -121,16 +125,60 @@ const deleteTour = (req, res) => {
   });
 };
 
+const getAllUsers = (req, res) => {
+  res.status(500).json({
+    status: 'err',
+    message: 'This route is not yet defined!',
+  });
+};
+
+const getUser = (req, res) => {
+  res.status(500).json({
+    status: 'err',
+    message: 'This route is not yet defined!',
+  });
+};
+
+const createUser = (req, res) => {
+  res.status(500).json({
+    status: 'err',
+    message: 'This route is not yet defined!',
+  });
+};
+
+const updateUser = (req, res) => {
+  res.status(500).json({
+    status: 'err',
+    message: 'This route is not yet defined!',
+  });
+};
+
+const deleteUser = (req, res) => {
+  res.status(500).json({
+    status: 'err',
+    message: 'This route is not yet defined!',
+  });
+};
 //route handler function
 //JSEND standard including results qty
-app.route('/api/v1/tours').get(getAllTours).post(createTour);
+//3. ROUTES
+//Mounting a new router on a route
 
-app
-  .route('/api/v1/tours/:id')
-  .get(getTour)
-  .patch(updateTour)
-  .delete(deleteTour);
+const tourRouter = express.Router();
+const userRouter = express.Router();
 
+tourRouter.route('/').get(getTour).patch(updateTour).delete(deleteTour);
+
+tourRouter.route('/:id').get(getAllTours).post(createTour);
+
+userRouter.route('/').get(getAllUsers).post(createUser);
+
+userRouter.route('/:id').get(getUser).patch(updateUser).delete(deleteUser);
+
+app.use('/api/v1/tours', tourRouter);
+app.use('/api/v1/users', userRouter);
+
+//4. START THE SERVER
 app.listen(port, () => {
   console.log(`app runing on port ${port}`);
 });
