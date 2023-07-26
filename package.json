@@ -4,8 +4,7 @@
   "description": "Learning node, express and mongoDB",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon app.js"
+    "start": "nodemon server.js"
   },
   "author": "Oliver Hidalgo",
   "license": "ISC",
