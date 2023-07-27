@@ -1,3 +1,4 @@
+//EXPRESS APPLICATION CONFIGURATION
 // Import required modules.
 const express = require('express');
 const app = express();
@@ -8,11 +9,15 @@ const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 
 // Middleware to log HTTP requests in development mode.
-app.use(morgan('dev'));
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
 
 // Middleware to parse incoming request bodies with JSON format.
 // It converts the data into a JSON object and attaches it to the req.body.
 app.use(express.json());
+//serve static files
+app.use(express.static(`${__dirname}/public`));
 
 // Custom middleware - This middleware will be executed for all routes.
 // It logs a message 'Hello from the middleware' in the console.

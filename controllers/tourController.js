@@ -6,6 +6,31 @@ const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
 );
 
+exports.checkID = (req, res, next, val) => {
+  console.log(`Tour id is: ${val}`);
+  if (req.params.id * 1 > tours.length) {
+    //So important to not continue with the send of another json cause
+    //its going to fail due to duplicate reponse
+    return res.status(404).json({
+      status: 'fail',
+      message: 'Invalid ID',
+    });
+  }
+  next();
+};
+
+exports.validateBody = (req, res, next) => {
+  const body = req.body;
+  const hasProperties = (...props) => props.every((prop) => prop in body);
+  if (!hasProperties('name', 'price')) {
+    return res.status(400).json({
+      status: 'fail',
+      message: 'Body doesnt have name or price properties',
+    });
+  }
+  next();
+};
+
 // Route handler for retrieving all tours.
 exports.getAllTours = (req, res) => {
   console.log(req.requestTime);
@@ -23,13 +48,6 @@ exports.getAllTours = (req, res) => {
 exports.getTour = (req, res) => {
   const id = req.params.id * 1;
   const tour = tours.find((el) => el.id === id);
-
-  if (!tour) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'Invalid ID',
-    });
-  }
 
   res.status(200).json({
     status: 'success',
@@ -53,7 +71,7 @@ exports.createTour = (req, res) => {
 
     // Write the updated tour data back to 'tours-simple.json' file.
     fs.writeFile(
-      `${__dirname}/dev-data/data/tours-simple.json`,
+      `${__dirname}/../dev-data/data/tours-simple.json`,
       JSON.stringify(tours),
       (err) => {
         if (err) {
@@ -79,13 +97,6 @@ exports.createTour = (req, res) => {
 
 // Route handler for updating a specific tour by ID.
 exports.updateTour = (req, res) => {
-  if (req.params.id * 1 > tours.length) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'Invalid ID',
-    });
-  }
-
   res.status(200).json({
     status: 'success',
     data: {
@@ -96,13 +107,6 @@ exports.updateTour = (req, res) => {
 
 // Route handler for deleting a specific tour by ID.
 exports.deleteTour = (req, res) => {
-  if (req.params.id * 1 > tours.length) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'Invalid ID',
-    });
-  }
-
   res.status(204).json({
     status: 'success',
     data: null,
