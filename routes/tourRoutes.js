@@ -8,7 +8,7 @@ const tourController = require('./../controllers/tourController');
 const router = express.Router();
 
 // Define routes for handling tour-related operations.
-router.param('id', tourController.checkID);
+//router.param('id', tourController.checkID);
 
 // Route for handling GET, PATCH, and DELETE requests on the path '/api/v1/tours/:id'.
 router
@@ -21,7 +21,7 @@ router
 router
   .route('/')
   .get(tourController.getAllTours) // Route handler for retrieving all tours.
-  .post(tourController.validateBody, tourController.createTour); // Route handler for creating a new tour.
+  .post(tourController.createTour); // Route handler for creating a new tour.
 
 // Export the 'router' object to make it accessible from other modules.
 module.exports = router;
