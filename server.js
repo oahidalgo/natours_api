@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 // Import the 'app' module.
 const dotenv = require('dotenv');
-const app = require('./app');
 //read .env config file and save the env variables to the nodejs process
 dotenv.config({ path: './config.env' });
+const app = require('./app');
 //connect to the Atlas Mongo DB
 const DB = process.env.DATABASE.replace(
   '<PASSWORD>',
