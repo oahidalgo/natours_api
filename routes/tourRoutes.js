@@ -9,6 +9,12 @@ const router = express.Router();
 
 // Define routes for handling tour-related operations.
 //router.param('id', tourController.checkID);
+router
+  .route('/top-5-cheap')
+  .get(tourController.aliasTopTours, tourController.getAllTours);
+
+router.route('/tour-stats').get(tourController.getTourStats);
+router.route('/monthly-plan/:year').get(tourController.getMonthlyPlan);
 
 // Route for handling GET, PATCH, and DELETE requests on the path '/api/v1/tours/:id'.
 router
