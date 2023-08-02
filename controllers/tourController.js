@@ -28,7 +28,7 @@ exports.getAllTours = async (req, res) => {
   } catch (err) {
     res.status(404).json({
       status: 'fail',
-      message: err,
+      message: err.message,
     });
   }
 };
@@ -47,7 +47,7 @@ exports.getTour = async (req, res) => {
   } catch (err) {
     res.status(404).json({
       status: 'fail',
-      message: err,
+      message: err.message,
     });
   }
 };
@@ -66,7 +66,7 @@ exports.createTour = async (req, res) => {
   } catch (err) {
     res.status(400).json({
       status: 'fail',
-      message: 'Invalid data sent!',
+      message: err.message,
     });
   }
 };
@@ -77,7 +77,7 @@ exports.updateTour = async (req, res) => {
     //new flag is gonna return the newly created tour
     const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
-      runValidators: true,
+      runValidators: true, //Important to run validators specified in the schema
     });
     res.status(200).json({
       status: 'success',
@@ -88,7 +88,7 @@ exports.updateTour = async (req, res) => {
   } catch (err) {
     res.status(400).json({
       status: 'fail',
-      message: 'Invalid data sent!',
+      message: err.message,
     });
   }
 };
@@ -105,7 +105,7 @@ exports.deleteTour = async (req, res) => {
   } catch (err) {
     res.status(400).json({
       status: 'fail',
-      message: 'Invalid data sent!',
+      message: err.message,
     });
   }
 };
@@ -155,19 +155,26 @@ exports.getTourStats = async (req, res) => {
     // If an error occurs, return an error message in JSON format
     res.status(400).json({
       status: 'fail',
-      message: 'Invalid data sent!',
+      message: err.message,
     });
   }
 };
 
+// Controller to get the monthly plan for a given year
 exports.getMonthlyPlan = async (req, res) => {
   try {
+    // Convert the year parameter to a number
     const year = req.params.year * 1;
+
+    // Perform an aggregation on the Tour collection
+    // to calculate the monthly plan for the specified year
     const plan = await Tour.aggregate([
       {
+        // Unwind the startDates array, creating a new document for each date
         $unwind: '$startDates',
       },
       {
+        // Match documents with startDates within the specified year
         $match: {
           startDates: {
             $gte: new Date(`${year}-01-01`),
@@ -176,30 +183,36 @@ exports.getMonthlyPlan = async (req, res) => {
         },
       },
       {
+        // Group the documents by month of the startDates
         $group: {
-          _id: { $month: '$startDates' },
-          numTourStats: { $sum: 1 },
-          tours: { $push: '$name' },
+          _id: { $month: '$startDates' }, // Extract the month from the date
+          numTourStats: { $sum: 1 }, // Count the number of tours for each month
+          tours: { $push: '$name' }, // Create an array of tour names for each month
         },
       },
       {
+        // Add a new field 'month' to hold the month extracted from '_id'
         $addFields: {
           month: '$_id',
         },
       },
       {
+        // Project to exclude the '_id' field from the result
         $project: {
           _id: 0,
         },
       },
       {
+        // Sort the results in descending order based on the number of tours for each month
         $sort: { numTourStats: -1 },
       },
       {
+        // Limit the result to only include the top 6 months with the most tours
         $limit: 6,
       },
     ]);
 
+    // Return the monthly plan data in JSON format as a successful response
     res.status(200).json({
       status: 'success',
       data: {
@@ -207,9 +220,10 @@ exports.getMonthlyPlan = async (req, res) => {
       },
     });
   } catch (error) {
+    // If an error occurs, return an error message in JSON format
     res.status(400).json({
       status: 'fail',
-      message: 'Invalid data sent!',
+      message: error.message,
     });
   }
 };

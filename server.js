@@ -7,7 +7,7 @@ const app = require('./app');
 //connect to the Atlas Mongo DB
 const DB = process.env.DATABASE.replace(
   '<PASSWORD>',
-  process.env.DATABASE_PASSWORD
+  process.env.DATABASE_PASSWORD,
 );
 // Connect to the MongoDB database
 mongoose
@@ -16,7 +16,7 @@ mongoose
     useCreateIndex: true, // Use createIndex() function to build indexes
     useFindAndModify: false, // Use native MongoDB findOneAndUpdate() and findOneAndRemove() methods instead of deprecated ones
   })
-  .then((con) => {
+  .then(() => {
     console.log('DB connection successful');
   });
 
