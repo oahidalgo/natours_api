@@ -20,13 +20,12 @@ if (process.env.NODE_ENV === 'development') {
 app.use(express.json());
 //serve static files
 app.use(express.static(`${__dirname}/public`));
-
 // Custom middleware - This middleware will be executed for all routes.
 // It logs a message 'Hello from the middleware' in the console.
-app.use((req, res, next) => {
+/*app.use((req, res, next) => {
   console.log('Hello from the middleware ');
   next();
-});
+});*/
 
 // Custom middleware - This middleware adds a new property 'requestTime' to the req object.
 // The 'requestTime' property is set to the current date and time in ISO string format.

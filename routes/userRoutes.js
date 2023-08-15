@@ -3,12 +3,15 @@ const express = require('express');
 
 // Import the userController module.
 const userController = require('./../controllers/userController');
+const authController = require('./../controllers/authController');
 
 // Create a new router instance.
 const router = express.Router();
 
-// Define routes for handling user-related operations.
-
+router.post('/signup', authController.signup);
+router.post('/login', authController.login);
+router.post('/forgotPassword', authController.forgotPassword);
+router.post('/resetPassword', authController.resetPassword);
 // Route for handling GET and POST requests on the root path '/api/v1/users'.
 router
   .route('/')
