@@ -8,7 +8,7 @@ dotenv.config({ path: './config.env' });
 //connect to the Atlas Mongo DB
 const DB = process.env.DATABASE.replace(
   '<PASSWORD>',
-  process.env.DATABASE_PASSWORD
+  process.env.DATABASE_PASSWORD,
 );
 // Connect to the MongoDB database
 mongoose
@@ -22,9 +22,7 @@ mongoose
   });
 
 //Read JSON file
-const tours = JSON.parse(
-  fs.readFileSync(`${__dirname}/tours-simple.json`, 'utf-8')
-);
+const tours = JSON.parse(fs.readFileSync(`${__dirname}/tours.json`, 'utf-8'));
 
 //Import data into db
 const importData = async () => {
