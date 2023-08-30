@@ -15,6 +15,7 @@ const globalErrorHandler = require('./controllers/errorController');
 // Import route modules.
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
+const reviewRouter = require('./routes/reviewRoutes');
 
 //Set security http headers
 app.use(helmet());
@@ -80,6 +81,8 @@ app.use('/api/v1/tours', tourRouter);
 // Mount the 'userRouter' middleware on the specified path.
 // All routes defined in 'userRouter' will be accessible under '/api/v1/users'.
 app.use('/api/v1/users', userRouter);
+
+app.use('/api/v1/reviews', reviewRouter);
 
 //If a route was not found, a json response will be thrown
 app.all('*', (req, res, next) => {

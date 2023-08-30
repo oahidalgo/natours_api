@@ -3,11 +3,13 @@ const express = require('express');
 
 // Import the tourController module.
 const tourController = require('./../controllers/tourController');
-
 const authController = require('./../controllers/authController');
+const reviewRouter = require('./../routes/reviewRoutes');
 
 // Create a new router instance.
 const router = express.Router();
+
+router.use('/:tourId/reviews', reviewRouter);
 
 // Define routes for handling tour-related operations.
 //router.param('id', tourController.checkID);
