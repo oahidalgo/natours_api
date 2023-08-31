@@ -11,20 +11,6 @@ const filterObj = (obj, ...allowedFields) => {
   return newObj;
 };
 
-// Route handler for retrieving all users.
-exports.getAllUsers = catchAsync(async (req, res, next) => {
-  const users = await User.find();
-
-  //send response
-  res.status(200).json({
-    status: 'success',
-    results: users.length,
-    data: {
-      users,
-    },
-  });
-});
-
 exports.updateMe = async (req, res, next) => {
   // 1) Create error if user POSTs password data
   if (req.body.password || req.body.passwordConfirm) {
@@ -60,25 +46,20 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
   });
 });
 
-// Route handler for retrieving a specific user by ID.
-exports.getUser = (req, res) => {
-  res.status(500).json({
-    status: 'err',
-    message: 'This route is not yet defined!',
-  });
-};
-
 // Route handler for creating a new user.
 exports.createUser = (req, res) => {
   res.status(500).json({
     status: 'err',
-    message: 'This route is not yet defined!',
+    message: 'This route is not defined! Please use sign up instead',
   });
 };
 
+// Route handler for retrieving a specific user by ID.
+exports.getUser = factory.getOne(User);
+// Route handler for retrieving all users.
+exports.getAllUsers = factory.getAll(User);
 //Dont update passwords with this
 // Route handler for updating a specific user by ID.
 exports.updateUser = factory.updateOne(User);
-
 // Route handler for deleting a specific user by ID.
 exports.deleteUser = factory.deleteOne(User);

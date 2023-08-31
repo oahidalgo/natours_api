@@ -1,8 +1,6 @@
 const Tour = require('./../models/tourModel');
-const APIFeatures = require('./../utils/apiFeatures');
-const catchAsync = require('./../utils/catchAsync');
-const AppError = require('./../utils/appError');
 const factory = require('./handlerFactory');
+const catchAsync = require('./../utils/catchAsync');
 
 exports.aliasTopTours = (req, res, next) => {
   req.query.limit = '5';
@@ -11,49 +9,6 @@ exports.aliasTopTours = (req, res, next) => {
   //Always in a middleware to call the next mw, like a callback
   next();
 };
-
-// Route handler for retrieving all tours.
-exports.getAllTours = catchAsync(async (req, res, next) => {
-  //execute query
-  const features = new APIFeatures(Tour.find(), req.query)
-    .filter()
-    .sort()
-    .limitFields()
-    .paginate();
-  const tours = await features.query;
-  res.status(200).json({
-    status: 'success',
-    results: tours.length,
-    data: {
-      tours,
-    },
-  });
-});
-
-// Route handler for retrieving a specific tour by ID.
-exports.getTour = catchAsync(async (req, res, next) => {
-  //fn to get specific tour by ID
-  const tour = await Tour.findById(req.params.id).populate('reviews');
-  if (!tour) {
-    return next(new AppError('No tour found with that ID', 404));
-  }
-
-  res.status(200).json({
-    status: 'success',
-    data: {
-      tour,
-    },
-  });
-});
-
-// Route handler for creating a new tour.
-exports.createTour = factory.createOne(Tour);
-
-// Route handler for updating a specific tour by ID.
-exports.updateTour = factory.updateOne(Tour);
-
-// Route handler for deleting a specific tour by ID.
-exports.deleteTour = factory.deleteOne(Tour);
 
 // Controller to get tour statistics
 exports.getTourStats = catchAsync(async (req, res, next) => {
@@ -84,8 +39,8 @@ exports.getTourStats = catchAsync(async (req, res, next) => {
     },
     // Commented block to filter additional results (if needed)
     /*{
-        $match: { _id: { $ne: 'EASY' } },
-      },*/
+      $match: { _id: { $ne: 'EASY' } },
+    },*/
   ]);
 
   // Return the statistical data in JSON format as a successful response
@@ -156,3 +111,14 @@ exports.getMonthlyPlan = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+// Route handler for retrieving all tours.
+exports.getAllTours = factory.getAll(Tour);
+// Route handler for retrieving a specific tour by ID.
+exports.getTour = factory.getOne(Tour, { path: 'reviews' });
+// Route handler for creating a new tour.
+exports.createTour = factory.createOne(Tour);
+// Route handler for updating a specific tour by ID.
+exports.updateTour = factory.updateOne(Tour);
+// Route handler for deleting a specific tour by ID.
+exports.deleteTour = factory.deleteOne(Tour);
