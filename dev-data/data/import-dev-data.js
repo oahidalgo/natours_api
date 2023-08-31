@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 // Import the 'app' module.
 const dotenv = require('dotenv');
 const Tour = require('./../../models/tourModel');
+const Review = require('./../../models/reviewModel');
+const User = require('./../../models/userModel');
 //read .env config file and save the env variables to the nodejs process
 dotenv.config({ path: './config.env' });
 //connect to the Atlas Mongo DB
@@ -23,11 +25,18 @@ mongoose
 
 //Read JSON file
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/tours.json`, 'utf-8'));
+const users = JSON.parse(fs.readFileSync(`${__dirname}/users.json`, 'utf-8'));
+const reviews = JSON.parse(
+  fs.readFileSync(`${__dirname}/reviews.json`, 'utf-8'),
+);
 
 //Import data into db
 const importData = async () => {
   try {
     await Tour.create(tours);
+    //skip validation for passwordConfirm
+    await User.create(users, { validateBeforeSave: false });
+    await Review.create(reviews);
     console.log('Data successfully loaded');
   } catch (err) {
     console.log(err);
@@ -40,6 +49,8 @@ const importData = async () => {
 const deleteData = async () => {
   try {
     await Tour.deleteMany();
+    await User.deleteMany();
+    await Review.deleteMany();
     console.log('Data successfully deleted');
   } catch (err) {
     console.log(err);
