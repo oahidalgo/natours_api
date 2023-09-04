@@ -26,6 +26,13 @@ router
     tourController.getMonthlyPlan,
   );
 
+router
+  .route('/tours-within/:distance/center/:latlng/unit/:unit')
+  .get(tourController.getToursWithin);
+// /tours
+
+router.route('/distances/:latlng/unit/:unit').get(tourController.getDistances);
+
 // Route for handling GET, PATCH, and DELETE requests on the path '/api/v1/tours/:id'.
 router
   .route('/:id')
