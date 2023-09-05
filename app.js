@@ -1,7 +1,7 @@
 //EXPRESS APPLICATION CONFIGURATION
 // Import required modules.
+const path = require('path');
 const express = require('express');
-const app = express();
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
@@ -16,6 +16,18 @@ const globalErrorHandler = require('./controllers/errorController');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
+const viewRouter = require('./routes/viewRoutes');
+
+const app = express();
+
+//Dont require pug, express does it internally
+//Configure the engine
+app.set('view engine', 'pug');
+//Configure the path of the views
+app.set('views', path.join(__dirname, 'views'));
+
+//serve static files
+app.use(express.static(path.join(__dirname, 'public')));
 
 //Set security http headers
 app.use(helmet());
@@ -58,8 +70,6 @@ app.use(
   }),
 );
 
-//serve static files
-app.use(express.static(`${__dirname}/public`));
 // Custom middleware - This middleware will be executed for all routes.
 // It logs a message 'Hello from the middleware' in the console.
 /*app.use((req, res, next) => {
@@ -74,6 +84,7 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use('/', viewRouter);
 // Mount the 'tourRouter' middleware on the specified path.
 // All routes defined in 'tourRouter' will be accessible under '/api/v1/tours'.
 app.use('/api/v1/tours', tourRouter);
