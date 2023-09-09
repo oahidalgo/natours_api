@@ -49,6 +49,8 @@ app.use('/api', limiter);
 // Middleware to parse incoming request bodies with JSON format.
 // It converts the data into a JSON object and attaches it to the req.body.
 app.use(express.json({ limit: '10kb' }));
+//parse data from an url encoded form
+app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(cookieParser());
 
 //Data sanitization against NoSQL query injection
