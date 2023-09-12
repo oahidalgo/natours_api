@@ -9,6 +9,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
+const compression = require('compression');
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
@@ -74,6 +75,8 @@ app.use(
   }),
 );
 
+app.use(compression());
+
 // Custom middleware - This middleware will be executed for all routes.
 // It logs a message 'Hello from the middleware' in the console.
 /*app.use((req, res, next) => {
@@ -85,7 +88,7 @@ app.use(
 // The 'requestTime' property is set to the current date and time in ISO string format.
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
-  console.log(req.cookies);
+  //console.log(req.cookies);
   next();
 });
 

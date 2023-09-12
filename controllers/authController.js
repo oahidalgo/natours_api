@@ -190,7 +190,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   } catch (err) {
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
-    console.log(err);
+    //console.log(err);
 
     await user.save({ validateBeforeSave: false });
 
